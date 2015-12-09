@@ -3,12 +3,13 @@ package com.mediamemo.onlinelibrary;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -68,15 +69,17 @@ public class OnlineLibraryFragment extends Fragment {
     }
 
 
-    private WebView webView;
 
+    private WebView webView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_online_library, container, false);
+//        View v = inflater.inflate(R.layout.scrolling_content, container, false);
         webView = (WebView) v.findViewById(R.id.online_web_view);
         initWebView();
+
         return v;
     }
 
@@ -85,6 +88,8 @@ public class OnlineLibraryFragment extends Fragment {
         settings.setSupportZoom(true);
         settings.setBuiltInZoomControls(true);
         settings.setJavaScriptEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setDomStorageEnabled(true);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -92,7 +97,6 @@ public class OnlineLibraryFragment extends Fragment {
                 view.loadUrl(url);
                 return true;
             }
-
 
         });
 
@@ -102,7 +106,7 @@ public class OnlineLibraryFragment extends Fragment {
                 if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
                     if (i == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
                         webView.stopLoading();
-                        webView.goBack();
+                        goBackPage();
                         return true;
                     }
                 }
@@ -110,8 +114,33 @@ public class OnlineLibraryFragment extends Fragment {
             }
         });
 
+        webView.setInitialScale(100);
         webView.loadUrl("http://www.verycd.com/");
+//        webView.loadUrl("http://m.verycd.com/");
     }
+
+
+    public void goBackPage() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+//            if (!webView.canGoBack()) {
+//                btnHistory.setEnabled(false);
+//            }
+        }
+    }
+
+    public String getPageTitle() {
+        return webView.getTitle();
+    }
+
+    public String getPageUrl() {
+        return webView.getUrl();
+    }
+
+
+
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -158,5 +187,7 @@ public class OnlineLibraryFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+
 
 }
