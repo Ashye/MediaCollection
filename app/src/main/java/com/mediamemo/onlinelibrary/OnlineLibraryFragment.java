@@ -76,7 +76,6 @@ public class OnlineLibraryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_online_library, container, false);
-//        View v = inflater.inflate(R.layout.scrolling_content, container, false);
         webView = (WebView) v.findViewById(R.id.online_web_view);
         initWebView();
 
@@ -85,11 +84,18 @@ public class OnlineLibraryFragment extends Fragment {
 
     private void initWebView() {
         WebSettings settings = webView.getSettings();
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
+
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         settings.setDomStorageEnabled(true);
+
+        /**
+         * support auto scale web pages to fit the mobile screen size
+         */
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -114,7 +120,7 @@ public class OnlineLibraryFragment extends Fragment {
             }
         });
 
-        webView.setInitialScale(100);
+
         webView.loadUrl("http://www.verycd.com/");
 //        webView.loadUrl("http://m.verycd.com/");
     }

@@ -1,55 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.mediamemo.localcollection.LocalCollectionFragment">
 
 
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
-    android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
-    android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
-    android:text="@string/hello_blank_fragment" />
-    <TextView android:layout_width="match_parent"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
-    android:text="@string/hello_blank_fragment" />
+    <GridView
+        android:id="@+id/collection_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/abc_button_padding_horizontal_material"
+        android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
+        android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+        android:paddingEnd="@dimen/abc_button_padding_horizontal_material"
+        android:numColumns="3"
+        android:gravity="center"
+        android:stretchMode="columnWidth">
+    </GridView>
 
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

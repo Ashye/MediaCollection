@@ -3,12 +3,23 @@ package com.mediamemo.localcollection;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.mediamemo.R;
+import com.mediamemo.onlinelibrary.CollectionController;
+import com.mediamemo.onlinelibrary.CollectionGVAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +29,8 @@ import com.mediamemo.R;
  * Use the {@link LocalCollectionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocalCollectionFragment extends Fragment {
+public class LocalCollectionFragment extends Fragment implements AdapterView.OnItemClickListener,
+        CollectionController.OnCollectionDataChangedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,6 +64,12 @@ public class LocalCollectionFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    private GridView gridView;
+    private CollectionGVAdapter gvAdapter;
+    private List<CollectionBean> collectionDatas;
+    private CollectionController dataController;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +83,46 @@ public class LocalCollectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_local_collection, container, false);
-        return inflater.inflate(R.layout.scrolling_content, container, false);
+        View v = inflater.inflate(R.layout.fragment_local_collection, container, false);
+        gridView = (GridView) v.findViewById(R.id.collection_grid_view);
+
+        collectionDatas = new ArrayList<CollectionBean>();
+        gvAdapter = new CollectionGVAdapter(getActivity(), collectionDatas);
+        gridView.setAdapter(gvAdapter);
+        gvAdapter.notifyDataSetChanged();
+        gridView.setOnItemClickListener(this);
+        dataController.setDataChangedListener(this);
+        dataController.dataChangeNotify();
+        return v;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
+        SnackBarAction("选择 "+bean.getTitle());
+    }
+
+    private void SnackBarAction(String message) {
+        Snackbar.make(gridView, "click"+message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private Handler handler = new Handler();
+    @Override
+    public void onCollectionChanged(List<CollectionBean> after) {
+        if (after != null && collectionDatas != null) {
+            collectionDatas.clear();
+            collectionDatas.addAll(after);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    gvAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    public void setDataController(CollectionController dataController) {
+        this.dataController = dataController;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
