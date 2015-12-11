@@ -24,7 +24,6 @@ import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
-import com.mediamemo.view.FrameTabViewPager;
 
 import java.util.ArrayList;
 import java.util.List;

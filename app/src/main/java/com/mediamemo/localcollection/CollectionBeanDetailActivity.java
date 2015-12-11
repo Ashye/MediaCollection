@@ -1,7 +1,10 @@
 package com.mediamemo.localcollection;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +25,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
 
     private FloatingActionButton btnHistory;
     private WebView webView;
+    private SwipeRefreshLayout refreshLayout;
     private CollectionBean bean;
 
 
@@ -77,6 +81,14 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         btnHistory = (FloatingActionButton) findViewById(R.id.btn_history);
         btnHistory.setOnClickListener(this);
 
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.detail_refresh);
+        refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE, Color.BLACK);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                webView.reload();
+            }
+        });
 
         webView = (WebView) findViewById(R.id.detail_web_view);
         WebSettings settings = webView.getSettings();
@@ -100,6 +112,17 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
                 return true;
             }
 
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                refreshLayout.setRefreshing(true);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                refreshLayout.setRefreshing(false);
+            }
         });
 
         webView.setOnKeyListener(new View.OnKeyListener() {

@@ -25,12 +25,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <WebView
-        android:id="@+id/detail_web_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/detail_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </WebView>
+
+        <WebView
+            android:id="@+id/detail_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </WebView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

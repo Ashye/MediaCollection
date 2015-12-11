@@ -85,6 +85,13 @@ public class OnlineLibraryFragment extends Fragment {
         webView = (WebView) v.findViewById(R.id.online_web_view);
         refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refresh_view);
         refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE, Color.BLACK);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                webView.reload();
+            }
+        });
+
 
         initWebView();
 
