@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.mediamemo.R;
-import com.mediamemo.onlinelibrary.CollectionController;
+import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.onlinelibrary.CollectionGVAdapter;
 
 import java.util.ArrayList;
@@ -136,25 +133,11 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
         this.dataController = dataController;
     }
 
-    private OnLocalCollectionActionListener actionListener;
+    private CollectionController.OnCollectionActionListener actionListener;
 
-    public void setActionListener(OnLocalCollectionActionListener actionListener) {
+    public void setActionListener(CollectionController.OnCollectionActionListener actionListener) {
         this.actionListener = actionListener;
     }
-
-    public interface OnLocalCollectionActionListener {
-        void onActionDelete(int position, CollectionBean bean);
-        void onActionDetail(CollectionBean bean);
-    }
-
-
-
-
-
-
-
-
-
 
 
 

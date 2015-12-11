@@ -1,4 +1,4 @@
-package com.mediamemo.onlinelibrary;
+package com.mediamemo.datacontroller;
 
 import android.content.Context;
 
@@ -91,5 +91,13 @@ public class CollectionController extends SharePrefStorage {
      */
     public interface OnCollectionDataChangedListener {
         void onCollectionChanged(List<CollectionBean> after);
+    }
+
+    /**
+     *
+     */
+    public interface OnCollectionActionListener {
+        void onActionDelete(int position, CollectionBean bean);
+        void onActionDetail(CollectionBean bean);
     }
 }

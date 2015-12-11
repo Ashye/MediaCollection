@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.mediamemo.localcollection.CollectionBeanDetailActivity;
-import com.mediamemo.onlinelibrary.CollectionController;
+import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
@@ -34,7 +34,7 @@ import java.util.TimerTask;
 
 public class MainFrameActivity extends AppCompatActivity implements LocalCollectionFragment.OnFragmentInteractionListener,
         OnlineLibraryFragment.OnFragmentInteractionListener,
-        LocalCollectionFragment.OnLocalCollectionActionListener {
+        CollectionController.OnCollectionActionListener {
 
     private TabLayout frameTabLayout;
     private ViewPager fragmentViewPager;
