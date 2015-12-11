@@ -7,6 +7,10 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="shou_cang">收藏</string>
+    <string name="action_view_point_mode_fit">合适尺寸</string>
+    <string name="action_view_point_mode_origin">原始尺寸</string>
+
 
     <string name="large_text">
         "Material is the metaphor.\n\n"

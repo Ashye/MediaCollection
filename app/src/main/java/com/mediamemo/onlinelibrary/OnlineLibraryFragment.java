@@ -1,15 +1,18 @@
 package com.mediamemo.onlinelibrary;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -84,7 +87,7 @@ public class OnlineLibraryFragment extends Fragment {
 
     private void initWebView() {
         WebSettings settings = webView.getSettings();
-
+        settings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0");
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         settings.setDomStorageEnabled(true);
@@ -103,7 +106,14 @@ public class OnlineLibraryFragment extends Fragment {
                 view.loadUrl(url);
                 return true;
             }
+        });
 
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                Log.e("icon url:", "newProgress:"+newProgress);
+                super.onProgressChanged(view, newProgress);
+            }
         });
 
         webView.setOnKeyListener(new View.OnKeyListener() {
@@ -125,13 +135,9 @@ public class OnlineLibraryFragment extends Fragment {
 //        webView.loadUrl("http://m.verycd.com/");
     }
 
-
     public void goBackPage() {
         if (webView.canGoBack()) {
             webView.goBack();
-//            if (!webView.canGoBack()) {
-//                btnHistory.setEnabled(false);
-//            }
         }
     }
 

@@ -37,7 +37,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         CollectionController.OnCollectionActionListener {
 
     private TabLayout frameTabLayout;
-    private ViewPager fragmentViewPager;
+    private FrameTabViewPager fragmentViewPager;
 
     private CollectionController collectionDataController;
 
@@ -81,7 +81,8 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
     private FragmentVPAdapter fragmentVPAdapter;
     private void initViewPager() {
-        fragmentViewPager = (ViewPager) findViewById(R.id.fragment_view_pager);
+        fragmentViewPager = (FrameTabViewPager) findViewById(R.id.fragment_view_pager);
+        fragmentViewPager.setScrollable(false);
 
         fragmentVPAdapter = new FragmentVPAdapter(getSupportFragmentManager());
         fragmentViewPager.setAdapter(fragmentVPAdapter);
@@ -164,7 +165,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
     private void initData() {
         collectionDataController = new CollectionController(this);
-//        collectionDataController.setDataChangedListener();
     }
 
     @Override
@@ -208,6 +208,8 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
             }else {
                 SnackBarMessage("该资源不支持收藏");
             }
+        }else {
+            SnackBarMessage("本页面不支持该操作");
         }
     }
 
@@ -218,7 +220,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
                     @Override
                     public void onClick(View view) {
                         collectionDataController.deleteItem(bean);
-                        Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                        SnackBarMessage("删除成功");
                     }
                 }).show();
     }
@@ -253,7 +255,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
             System.exit(0);
         }else {
             isSecondExit = true;
-            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            SnackBarMessage("再按一次退出");
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {

@@ -1,10 +1,13 @@
 package com.mediamemo.localcollection;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -77,6 +80,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
 
         webView = (WebView) findViewById(R.id.detail_web_view);
         WebSettings settings = webView.getSettings();
+        settings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0");
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         settings.setDomStorageEnabled(true);
@@ -119,6 +123,25 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_shoucang:
+//                actionViewPointMode(item);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
 
     @Override
     public void onClick(View view) {
@@ -128,6 +151,8 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     public void goBackPage() {
         if (webView.canGoBack()) {
             webView.goBack();
+        }else {
+            Snackbar.make(webView, "已经到顶了", Snackbar.LENGTH_SHORT).show();
         }
     }
 }
