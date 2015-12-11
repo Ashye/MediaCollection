@@ -6,13 +6,8 @@ import android.content.SharedPreferences;
 /**
  * Created by Administrator on 2015/12/10.
  */
-public class DefaultStorage extends BaseStorage {
+public class SharePrefStorage extends BaseStorage {
 
-//    private static Context CONTEXT;
-//
-//    public DefaultStorage(Context context) {
-//        CONTEXT = context;
-//    }
 
 
 

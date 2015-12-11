@@ -15,7 +15,8 @@
 
 #### Storage
 ##### 抽象方法
-+ save(String key, T value) --> boolean
++ save(String key, String value) --> boolean
++ save(String key, int value) --> boolean
 + loadString(String key) --> String
 + loadInt(String key) --> int
 

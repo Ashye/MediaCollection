@@ -1,10 +1,9 @@
 package com.mediamemo.onlinelibrary;
 
 import android.content.Context;
-import android.util.SparseArray;
 
 import com.alibaba.fastjson.JSON;
-import com.ashye.storage.DefaultStorage;
+import com.ashye.storage.SharePrefStorage;
 import com.mediamemo.localcollection.CollectionBean;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/12/10.
  */
-public class CollectionController extends DefaultStorage {
+public class CollectionController extends SharePrefStorage {
 
     private static final String COLLECTIONS = "beans";
     private List<CollectionBean> collectionBeans;
@@ -52,6 +51,14 @@ public class CollectionController extends DefaultStorage {
         boolean ret = collectionBeans.remove(bean);
         flush();
         return ret;
+    }
+
+    public boolean deleteItemAt(int id) {
+        CollectionBean ret = collectionBeans.remove(id);
+        if (ret != null) {
+            flush(); 
+        }
+        return true;
     }
 
     private boolean flush() {

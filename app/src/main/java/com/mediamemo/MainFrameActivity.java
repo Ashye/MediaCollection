@@ -1,5 +1,6 @@
 package com.mediamemo;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -16,8 +17,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.mediamemo.localcollection.CollectionBeanDetailActivity;
 import com.mediamemo.onlinelibrary.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
@@ -29,7 +33,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainFrameActivity extends AppCompatActivity implements LocalCollectionFragment.OnFragmentInteractionListener,
-        OnlineLibraryFragment.OnFragmentInteractionListener {
+        OnlineLibraryFragment.OnFragmentInteractionListener,
+        LocalCollectionFragment.OnLocalCollectionActionListener {
 
     private TabLayout frameTabLayout;
     private ViewPager fragmentViewPager;
@@ -151,6 +156,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
                 default:
                     LocalCollectionFragment fragment = LocalCollectionFragment.newInstance(null, null);
                     fragment.setDataController(collectionDataController);
+                    fragment.setActionListener(MainFrameActivity.this);
                     return fragment;
             }
         }
@@ -204,6 +210,27 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
             }
         }
     }
+
+    @Override
+    public void onActionDelete(int position, final CollectionBean bean) {
+        Snackbar.make(frameTabLayout, "删除 "+bean.getTitle(), Snackbar.LENGTH_LONG)
+                .setAction("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        collectionDataController.deleteItem(bean);
+                        Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onActionDetail(CollectionBean bean) {
+//        SnackBarMessage("打开详情页面");
+        Intent intent = new Intent(this, CollectionBeanDetailActivity.class);
+        intent.putExtra("bean", JSON.toJSONString(bean));
+        startActivity(intent);
+    }
+
 
     private void SnackBarMessage(String message) {
         Snackbar.make(frameTabLayout, "".concat(message), Snackbar.LENGTH_SHORT).show();

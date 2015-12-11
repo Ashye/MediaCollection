@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.mediamemo.R;
 import com.mediamemo.onlinelibrary.CollectionController;
@@ -30,7 +30,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class LocalCollectionFragment extends Fragment implements AdapterView.OnItemClickListener,
-        CollectionController.OnCollectionDataChangedListener {
+        CollectionController.OnCollectionDataChangedListener,
+        AdapterView.OnItemLongClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,6 +92,7 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
         gridView.setAdapter(gvAdapter);
         gvAdapter.notifyDataSetChanged();
         gridView.setOnItemClickListener(this);
+        gridView.setOnItemLongClickListener(this);
         dataController.setDataChangedListener(this);
         dataController.dataChangeNotify();
         return v;
@@ -99,12 +101,21 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
-        SnackBarAction("选择 "+bean.getTitle());
+        if (actionListener != null) {
+            actionListener.onActionDetail(bean);
+        }
     }
 
-    private void SnackBarAction(String message) {
-        Snackbar.make(gridView, "click"+message, Snackbar.LENGTH_LONG).show();
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
+        if (actionListener != null) {
+            actionListener.onActionDelete(i, bean);
+        }
+        return true;
     }
+
+
 
     private Handler handler = new Handler();
     @Override
@@ -124,6 +135,30 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
     public void setDataController(CollectionController dataController) {
         this.dataController = dataController;
     }
+
+    private OnLocalCollectionActionListener actionListener;
+
+    public void setActionListener(OnLocalCollectionActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    public interface OnLocalCollectionActionListener {
+        void onActionDelete(int position, CollectionBean bean);
+        void onActionDetail(CollectionBean bean);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

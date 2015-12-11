@@ -10,8 +10,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
@@ -35,30 +34,5 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/web_view_shou_cang_btn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabSize="normal"-->
-        <!--app:pressedTranslationZ="15dp"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-        <!--android:src="@android:drawable/star_big_off"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/web_view_history_btn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabSize="normal"-->
-        <!--app:pressedTranslationZ="15dp"-->
-        <!--android:layout_gravity="bottom|start"-->
-        <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-        <!--android:src="@android:drawable/ic_menu_revert"-->
-        <!--android:visibility="gone"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

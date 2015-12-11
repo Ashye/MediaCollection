@@ -167,13 +167,6 @@ public class OnlineLibraryFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        Toast.makeText(getActivity(), "onattach onlinelibrary fragment", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
