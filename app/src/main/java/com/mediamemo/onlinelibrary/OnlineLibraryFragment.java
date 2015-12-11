@@ -2,11 +2,13 @@ package com.mediamemo.onlinelibrary;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -74,12 +76,16 @@ public class OnlineLibraryFragment extends Fragment {
 
 
     private WebView webView;
+    private SwipeRefreshLayout refreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_online_library, container, false);
         webView = (WebView) v.findViewById(R.id.online_web_view);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refresh_view);
+        refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE, Color.BLACK);
+
         initWebView();
 
         return v;
@@ -106,13 +112,17 @@ public class OnlineLibraryFragment extends Fragment {
                 view.loadUrl(url);
                 return true;
             }
-        });
 
-        webView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                Log.e("icon url:", "newProgress:"+newProgress);
-                super.onProgressChanged(view, newProgress);
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                refreshLayout.setRefreshing(true);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                refreshLayout.setRefreshing(false);
             }
         });
 

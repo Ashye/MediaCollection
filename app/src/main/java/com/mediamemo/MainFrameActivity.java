@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.mediamemo.localcollection.CollectionBeanDetailActivity;
@@ -26,6 +24,7 @@ import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
+import com.mediamemo.view.FrameTabViewPager;
 
 import java.util.ArrayList;
 import java.util.List;

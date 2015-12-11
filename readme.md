@@ -1,6 +1,9 @@
 ## 计划
 + 用 toolbar 菜单取代 FloatActionButton done
-+ 添加去收藏功能  使用 snackbar 实现  ???
++ 添加去收藏功能  使用 snackbar 实现
++ 查看收藏顶详情
++ webview加载进度  ？？？
++ 收藏项icon ？？？
 
 
 

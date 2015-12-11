@@ -1,4 +1,4 @@
-package com.mediamemo;
+package com.mediamemo.view;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
