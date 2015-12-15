@@ -1,6 +1,6 @@
 package com.mediamemo;
 
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -16,28 +16,37 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.alibaba.fastjson.JSON;
-import com.mediamemo.localcollection.CollectionBeanDetailActivity;
+import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainFrameActivity extends AppCompatActivity implements LocalCollectionFragment.OnFragmentInteractionListener,
-        OnlineLibraryFragment.OnFragmentInteractionListener,
-        CollectionController.OnCollectionActionListener {
+        OnlineLibraryFragment.OnFragmentInteractionListener {
 
     private TabLayout frameTabLayout;
     private FrameTabViewPager fragmentViewPager;
 
     private CollectionController collectionDataController;
+
+//    private ImageLoader imageLoader;
 
 
 
@@ -47,15 +56,15 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         setContentView(R.layout.activity_main_frame);
 
         initToolbar();
+//        initImageLoader();
         initData();
         setupTabs();
-
     }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.mipmap.ic_launcher);
-        toolbar.setTitle("MediaMemo");
+        toolbar.setTitle("Demo");
         setSupportActionBar(toolbar);
     }
 
@@ -87,23 +96,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
         frameTabLayout.setupWithViewPager(fragmentViewPager);
         frameTabLayout.setTabsFromPagerAdapter(fragmentVPAdapter);
-        frameTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-                fragmentViewPager.setCurrentItem(tab.getPosition(), true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
     private class FragmentVPAdapter extends FragmentPagerAdapter {
@@ -155,15 +147,33 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
                 default:
                     LocalCollectionFragment fragment = LocalCollectionFragment.newInstance(null, null);
                     fragment.setDataController(collectionDataController);
-                    fragment.setActionListener(MainFrameActivity.this);
                     return fragment;
             }
         }
     }
 
     private void initData() {
-        collectionDataController = new CollectionController(this);
+        collectionDataController = CollectionController.newInstance(this);
     }
+
+//    private void initImageLoader() {
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+//                .threadPoolSize(3)
+//                .threadPriority(Thread.NORM_PRIORITY - 2)
+//                .denyCacheImageMultipleSizesInMemory()
+//                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+//                .memoryCacheSize(2 * 1024 * 1024)
+//                .diskCacheSize(50 * 1024 * 1024)
+//                .tasksProcessingOrder(QueueProcessingType.LIFO)
+//                .diskCacheFileCount(100)
+//                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+//                .imageDownloader(new BaseImageDownloader(this, 5*1000, 30*1000))
+//                .build();
+//        ImageLoader.getInstance().init(config);
+//        imageLoader = ImageLoader.getInstance();
+//    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,7 +186,8 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_shoucang:
-                actionShoucang();
+                checkShouCang();
+//                action
                 return true;
 
             default:
@@ -187,7 +198,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
 
     private static final String[] keys = new String[]{"entries", "topics"};
-    private void actionShoucang() {
+    private void checkShouCang() {
         int tabId = frameTabLayout.getSelectedTabPosition();
         if (tabId == 1) {
             OnlineLibraryFragment tab = (OnlineLibraryFragment) fragmentVPAdapter.getFragment(tabId);
@@ -195,13 +206,12 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
             String title = tab.getPageTitle();
 
             if (url.contains(keys[0])) {
-                CollectionBean bean = new CollectionBean(title, url, null);
-                if (collectionDataController.queryItem(bean)) {
-                    SnackBarMessage("重复收藏");
+                if (collectionDataController.queryItem(url)) {
+//                    if (collectionDataController.deleteItem(url)) {
+                        SnackBarMessage("重复收藏");
+//                    }
                 }else {
-                    if (collectionDataController.addItem(bean)) {
-                        SnackBarMessage("收藏成功");
-                    }
+                    actionAddShouCang(url);
                 }
             }else {
                 SnackBarMessage("该资源不支持收藏");
@@ -211,24 +221,32 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         }
     }
 
-    @Override
-    public void onActionDelete(int position, final CollectionBean bean) {
-        Snackbar.make(frameTabLayout, "删除 "+bean.getTitle(), Snackbar.LENGTH_LONG)
-                .setAction("确定", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        collectionDataController.deleteItem(bean);
-                        SnackBarMessage("删除成功");
+    private HtmlJsoupHelper jsoupHelper;
+    private void actionAddShouCang(final String url) {
+         new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        jsoupHelper = new HtmlJsoupHelper();
+                        jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
+                            @Override
+                            public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {
+                                String title = jsoupHelper.getTitle();
+                                String iconUrl = jsoupHelper.getIconUrl();
+                                String latest = jsoupHelper.getLatest();
+//                                Log.e("title", "page title:" + title);
+//                                Log.e("icon", "page iconUrl:" + iconUrl);
+//                                Log.e("latest", "page latest:" + latest);
+                                if (collectionDataController.addItem(new CollectionBean(title, url, iconUrl, latest))) {
+                                    SnackBarMessage("收藏成功");
+                                }
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }).show();
-    }
-
-    @Override
-    public void onActionDetail(CollectionBean bean) {
-//        SnackBarMessage("打开详情页面");
-        Intent intent = new Intent(this, CollectionBeanDetailActivity.class);
-        intent.putExtra("bean", JSON.toJSONString(bean));
-        startActivity(intent);
+                }
+            }).start();
     }
 
 

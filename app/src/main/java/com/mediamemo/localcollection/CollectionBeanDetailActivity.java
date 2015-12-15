@@ -2,11 +2,11 @@ package com.mediamemo.localcollection;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,6 +19,10 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.mediamemo.R;
+import com.mediamemo.datacontroller.CollectionController;
+import com.mediamemo.html.HtmlJsoupHelper;
+
+import java.io.IOException;
 
 
 public class CollectionBeanDetailActivity extends AppCompatActivity implements FloatingActionButton.OnClickListener {
@@ -28,11 +32,14 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     private SwipeRefreshLayout refreshLayout;
     private CollectionBean bean;
 
+    private CollectionController collectionController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_bean_detail);
+
+        collectionController = CollectionController.newInstance(this);
 
         getBundleData();
 
@@ -82,7 +89,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         btnHistory.setOnClickListener(this);
 
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.detail_refresh);
-        refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE, Color.BLACK);
+        refreshLayout.setColorSchemeColors(Color.BLUE, Color.GREEN, Color.RED);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -116,6 +123,15 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 refreshLayout.setRefreshing(true);
+                if (collectionController.queryItem(url)) {
+                    if (shouCang != null) {
+                        shouCang.setIcon(R.drawable.shou_cang_yes);
+                    }
+                }else {
+                    if (shouCang != null) {
+                        shouCang.setIcon(R.drawable.shou_cang_no);
+                    }
+                }
             }
 
             @Override
@@ -146,25 +162,66 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         }
     }
 
+    private MenuItem shouCang;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        shouCang = menu.findItem(R.id.action_shoucang);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_shoucang:
-//                actionViewPointMode(item);
+                checkShouCang();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void checkShouCang() {
+        if (collectionController.queryItem(bean.getUrl())) {
+            collectionController.deleteItem(bean.getUrl());
+            shouCang.setIcon(R.drawable.shou_cang_no);
+            SnackBarMessage("删除收藏成功");
 
+        }else {
+            actionAddShouCang(bean.getUrl());
+            shouCang.setIcon(R.drawable.shou_cang_yes);
+        }
+    }
 
+    private HtmlJsoupHelper jsoupHelper;
+    private void actionAddShouCang(final String url) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+            try {
+                jsoupHelper = new HtmlJsoupHelper();
+                jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
+                    @Override
+                    public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {
+                        String title = jsoupHelper.getTitle();
+                        String iconUrl = jsoupHelper.getIconUrl();
+                        String latest = jsoupHelper.getLatest();
+//                            Log.e("title", "page title:" + title);
+//                            Log.e("icon", "page iconUrl:" + iconUrl);
+//                            Log.e("latest", "page latest:" + latest);
+                        if (collectionController.addItem(new CollectionBean(title, bean.getUrl(), iconUrl, latest))) {
+//                            shouCang.setIcon(R.drawable.shou_cang_yes);
+                            SnackBarMessage("收藏成功");
+                        }
 
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
+        }).start();
+    }
 
     @Override
     public void onClick(View view) {
@@ -175,7 +232,11 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         if (webView.canGoBack()) {
             webView.goBack();
         }else {
-            Snackbar.make(webView, "已经到顶了", Snackbar.LENGTH_SHORT).show();
+            SnackBarMessage("已经到顶了");
         }
+    }
+
+    private void SnackBarMessage(String message) {
+        Snackbar.make(webView, "".concat(message), Snackbar.LENGTH_SHORT).show();
     }
 }

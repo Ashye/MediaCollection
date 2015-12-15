@@ -5,7 +5,7 @@
 
     <item android:id="@+id/action_shoucang"
         android:title="@string/shou_cang"
-        android:icon="@drawable/shou_cang_no"
+        android:icon="@android:drawable/ic_input_add"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
 

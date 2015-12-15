@@ -15,26 +15,36 @@ import java.util.List;
 public class CollectionController extends SharePrefStorage {
 
     private static final String COLLECTIONS = "beans";
-    private List<CollectionBean> collectionBeans;
 
+    private static CollectionController collectionController;
+    public static CollectionController newInstance(Context context) {
+        if (collectionController == null) {
+            collectionController = new CollectionController(context);
+        }
+        return collectionController;
+    }
+
+
+    private List<CollectionBean> collectionBeans;
     private Context context;
     private OnCollectionDataChangedListener dataChangedListener;
 
 
 
-    public CollectionController() {
-        collectionBeans = new ArrayList<CollectionBean>();
-    }
 
-    public CollectionController(Context context) {
-        this();
+    private CollectionController(Context context) {
+        collectionBeans = new ArrayList<CollectionBean>();
         this.context = context;
         load();
     }
 
-    public boolean queryItem(CollectionBean bean) {
-        for (CollectionBean target: collectionBeans) {
-            if (bean.getUrl().equals(target.getUrl())) {
+    public void reload() {
+        load();
+    }
+
+    public boolean queryItem(String key) {
+        for (CollectionBean bean : collectionBeans) {
+            if (bean.getUrl().equals(key)) {
                 return true;
             }
         }
@@ -45,6 +55,16 @@ public class CollectionController extends SharePrefStorage {
         collectionBeans.add(0, bean);
         flush();
         return true;
+    }
+
+    public boolean deleteItem(String key) {
+        for (CollectionBean bean : collectionBeans) {
+            if (bean.getUrl().equals(key)) {
+                deleteItem(bean);
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean deleteItem(CollectionBean bean) {
@@ -81,7 +101,6 @@ public class CollectionController extends SharePrefStorage {
         }
     }
 
-
     public void setDataChangedListener(OnCollectionDataChangedListener dataChangedListener) {
         this.dataChangedListener = dataChangedListener;
     }
@@ -91,13 +110,5 @@ public class CollectionController extends SharePrefStorage {
      */
     public interface OnCollectionDataChangedListener {
         void onCollectionChanged(List<CollectionBean> after);
-    }
-
-    /**
-     *
-     */
-    public interface OnCollectionActionListener {
-        void onActionDelete(int position, CollectionBean bean);
-        void onActionDetail(CollectionBean bean);
     }
 }

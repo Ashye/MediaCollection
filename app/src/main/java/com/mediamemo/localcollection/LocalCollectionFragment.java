@@ -1,19 +1,23 @@
 package com.mediamemo.localcollection;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.alibaba.fastjson.JSON;
 import com.mediamemo.R;
 import com.mediamemo.datacontroller.CollectionController;
-import com.mediamemo.onlinelibrary.CollectionGVAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +68,7 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
 
 
     private GridView gridView;
+    private SwipeRefreshLayout refreshLayout;
     private CollectionGVAdapter gvAdapter;
     private List<CollectionBean> collectionDatas;
     private CollectionController dataController;
@@ -78,10 +83,18 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_local_collection, container, false);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.collection_refresh);
+        refreshLayout.setColorSchemeColors(Color.BLUE, Color.GREEN, Color.RED);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                dataController.reload();
+            }
+        });
         gridView = (GridView) v.findViewById(R.id.collection_grid_view);
 
         collectionDatas = new ArrayList<CollectionBean>();
@@ -98,17 +111,25 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
-        if (actionListener != null) {
-            actionListener.onActionDetail(bean);
-        }
+//        SnackBarMessage("打开详情页面");
+        Intent intent = new Intent(getActivity(), CollectionBeanDetailActivity.class);
+        intent.putExtra("bean", JSON.toJSONString(bean));
+        startActivity(intent);
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
-        if (actionListener != null) {
-            actionListener.onActionDelete(i, bean);
-        }
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+        final CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
+
+        Snackbar.make(gridView.getRootView(), "删除 "+bean.getTitle(), Snackbar.LENGTH_LONG)
+        .setAction("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataController.deleteItemAt(i);
+                Snackbar.make(gridView.getRootView(), "删除成功", Snackbar.LENGTH_SHORT).show();
+            }
+        }).show();
+
         return true;
     }
 
@@ -127,17 +148,13 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
                 }
             });
         }
+        refreshLayout.setRefreshing(false);
     }
 
     public void setDataController(CollectionController dataController) {
         this.dataController = dataController;
     }
 
-    private CollectionController.OnCollectionActionListener actionListener;
-
-    public void setActionListener(CollectionController.OnCollectionActionListener actionListener) {
-        this.actionListener = actionListener;
-    }
 
 
 

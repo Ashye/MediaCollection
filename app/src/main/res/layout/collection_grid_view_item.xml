@@ -2,25 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="@dimen/abc_action_bar_default_padding_material"
-    android:paddingLeft="@dimen/abc_action_bar_default_padding_material"
-    android:paddingEnd="@dimen/abc_action_bar_default_padding_material"
-    android:paddingRight="@dimen/abc_action_bar_default_padding_material"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:gravity="center">
 
+
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/abc_action_bar_default_padding_material"
         android:src="@mipmap/ic_launcher"
-        android:id="@+id/item_icon" />
+        android:id="@+id/item_icon"
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="wrap_content"
+        android:textSize="8sp"
+        android:text="latest"
+        android:ems="10"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:id="@+id/item_latest"
+        android:layout_gravity="bottom|center_horizontal"
+        android:gravity="bottom|center_horizontal"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/abc_text_size_caption_material"
         android:text="Large Text"
+        android:ems="8"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:id="@+id/item_title"
         android:gravity="center" />
 </LinearLayout>

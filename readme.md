@@ -3,16 +3,22 @@
 + 添加去收藏功能  使用 snackbar 实现
 + 查看收藏顶详情
 + webview 刷新功能
-+ 收藏项icon ？？？
-
++ 收藏项icon 最新动态 done
++ 实现自由缩放，去掉了，上滑appbar出界面功能
++ 横竖屏切换  done
++ 收藏按纽
++ 本地收藏刷新  done
++ 刷新收藏 latest 信息  ？？？？
+    + 后台低优先级刷新任务管理  ？？？
++ 联网请求封装  ？？？
 
 
 
 
 ## 抽象，接口，模块
 ### 本地存储
-+ Storage
-    + SharePrefStorage
++ Storage<abstract>
+    + SharePrefStorage<implimentation>
     + SqlStorage : 待实现
 
 
@@ -24,9 +30,25 @@
 + loadInt(String key) --> int
 
 
+### 收藏管理
++ CollectionController
+
++ mainFrameTab
+    + localCollectionListFragment
+        + delete
+        + localCollectionDetail
+            + delete
+            + add
+
+    + onlineFragment
+        + add
+        + delete
+
 
 ### 网络请求
++ BackgroundTask
 
++ ActionHelper
 
 
 

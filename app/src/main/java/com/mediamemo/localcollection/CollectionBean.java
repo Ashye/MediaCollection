@@ -14,15 +14,18 @@ public class CollectionBean {
     private String url;
     @JSONField(name = "itemIcon")
     private String iconUrl;
+    @JSONField(name = "latest")
+    private String latest;
 
 
     public CollectionBean() {
     }
 
-    public CollectionBean(String title, String url, String iconUrl) {
+    public CollectionBean(String title, String url, String iconUrl, String latest) {
         this.title = title;
         this.url = url;
         this.iconUrl = iconUrl;
+        this.latest = latest;
     }
 
     public String getTitle() {
@@ -47,5 +50,13 @@ public class CollectionBean {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public String getLatest() {
+        return latest;
+    }
+
+    public void setLatest(String latest) {
+        this.latest = latest;
     }
 }

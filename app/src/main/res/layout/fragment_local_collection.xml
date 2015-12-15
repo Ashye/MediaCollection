@@ -1,27 +1,37 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mediamemo.localcollection.LocalCollectionFragment">
 
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+    <!-- 加这个是为了 appbar 上滚出界面 -->
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:paddingBottom="@dimen/activity_vertical_margin">-->
 
-        <com.mediamemo.localcollection.MyGridView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/collection_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <GridView
             android:id="@+id/collection_grid_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/abc_button_padding_horizontal_material"
             android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
             android:paddingRight="@dimen/abc_button_padding_horizontal_material"
             android:paddingEnd="@dimen/abc_button_padding_horizontal_material"
             android:numColumns="3"
             android:stretchMode="columnWidth">
-        </com.mediamemo.localcollection.MyGridView>
+        </GridView>
 
-    </android.support.v4.widget.NestedScrollView>
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

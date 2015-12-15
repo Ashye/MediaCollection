@@ -21,6 +21,10 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.mediamemo.R;
+import com.mediamemo.datacontroller.CollectionController;
+import com.mediamemo.html.HtmlJsoupHelper;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +68,7 @@ public class OnlineLibraryFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +82,13 @@ public class OnlineLibraryFragment extends Fragment {
 
     private WebView webView;
     private SwipeRefreshLayout refreshLayout;
+
+//    private CollectionController collectionController;
+//
+//    public void setCollectionController(CollectionController collectionController) {
+//        this.collectionController = collectionController;
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,7 +96,7 @@ public class OnlineLibraryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_online_library, container, false);
         webView = (WebView) v.findViewById(R.id.online_web_view);
         refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refresh_view);
-        refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE, Color.BLACK);
+        refreshLayout.setColorSchemeColors(Color.BLUE, Color.GREEN, Color.RED);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
