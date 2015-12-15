@@ -20,8 +20,6 @@ public class CollectionGVAdapter extends BaseAdapter {
 
     private List<CollectionBean> list;
     private LayoutInflater inflater;
-//    private ImageLoader imageLoader;
-//    private DisplayImageOptions imageOptions;
     private ImageLoader imageLoader;
 
 
@@ -29,8 +27,6 @@ public class CollectionGVAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
         this.list = list;
         imageLoader = new ImageLoader(context);
-//        imageLoader = ImageLoader.getInstance();
-//        imageOptions = initImageLoaderDisplay();
     }
 
 
@@ -68,7 +64,6 @@ public class CollectionGVAdapter extends BaseAdapter {
         holder.title.setText(bean.getTitle());
         holder.latest.setText(bean.getLatest());
         imageLoader.displayImageDefault(bean.getIconUrl(), holder.icon);
-//        imageLoader.displayImage(bean.getIconUrl(), holder.icon, imageOptions);
 
         return view;
     }
@@ -78,21 +73,4 @@ public class CollectionGVAdapter extends BaseAdapter {
         public TextView title;
         public TextView latest;
     }
-
-//    private DisplayImageOptions initImageLoaderDisplay() {
-//        return new DisplayImageOptions.Builder()
-//                .showImageOnLoading(R.mipmap.ic_launcher)
-//                .showImageForEmptyUri(R.mipmap.ic_launcher)
-//                .showImageOnFail(R.mipmap.ic_launcher)
-//                .cacheInMemory(true)
-//                .cacheOnDisk(true)
-//                .considerExifParams(true)
-//                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-//                .bitmapConfig(Bitmap.Config.RGB_565)
-////                .decodingOptions(android.graphics.BitmapFactory.Options decodeingOptions)
-//                .resetViewBeforeLoading(true)
-//                .displayer(new RoundedBitmapDisplayer(20))
-//                .displayer(new FadeInBitmapDisplayer(100))
-//                .build();
-//    }
 }

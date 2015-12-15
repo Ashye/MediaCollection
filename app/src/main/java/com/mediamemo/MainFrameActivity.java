@@ -46,8 +46,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
     private CollectionController collectionDataController;
 
-//    private ImageLoader imageLoader;
-
 
 
     @Override
@@ -56,7 +54,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         setContentView(R.layout.activity_main_frame);
 
         initToolbar();
-//        initImageLoader();
         initData();
         setupTabs();
     }
@@ -156,24 +153,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         collectionDataController = CollectionController.newInstance(this);
     }
 
-//    private void initImageLoader() {
-//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-//                .threadPoolSize(3)
-//                .threadPriority(Thread.NORM_PRIORITY - 2)
-//                .denyCacheImageMultipleSizesInMemory()
-//                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
-//                .memoryCacheSize(2 * 1024 * 1024)
-//                .diskCacheSize(50 * 1024 * 1024)
-//                .tasksProcessingOrder(QueueProcessingType.LIFO)
-//                .diskCacheFileCount(100)
-//                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-//                .imageDownloader(new BaseImageDownloader(this, 5*1000, 30*1000))
-//                .build();
-//        ImageLoader.getInstance().init(config);
-//        imageLoader = ImageLoader.getInstance();
-//    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,7 +166,6 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         switch (item.getItemId()) {
             case R.id.action_shoucang:
                 checkShouCang();
-//                action
                 return true;
 
             default:
@@ -203,13 +181,10 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         if (tabId == 1) {
             OnlineLibraryFragment tab = (OnlineLibraryFragment) fragmentVPAdapter.getFragment(tabId);
             String url = tab.getPageUrl();
-            String title = tab.getPageTitle();
 
             if (url.contains(keys[0])) {
                 if (collectionDataController.queryItem(url)) {
-//                    if (collectionDataController.deleteItem(url)) {
-                        SnackBarMessage("重复收藏");
-//                    }
+                    SnackBarMessage("重复收藏");
                 }else {
                     actionAddShouCang(url);
                 }
@@ -223,11 +198,13 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
     private HtmlJsoupHelper jsoupHelper;
     private void actionAddShouCang(final String url) {
+        if (jsoupHelper == null) {
+            jsoupHelper = new HtmlJsoupHelper();
+        }
          new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        jsoupHelper = new HtmlJsoupHelper();
                         jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
                             @Override
                             public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {

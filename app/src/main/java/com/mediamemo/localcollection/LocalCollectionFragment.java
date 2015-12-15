@@ -121,12 +121,12 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
         final CollectionBean bean = (CollectionBean) gvAdapter.getItem(i);
 
-        Snackbar.make(gridView.getRootView(), "删除 "+bean.getTitle(), Snackbar.LENGTH_LONG)
+        Snackbar.make(gridView, "删除 "+bean.getTitle(), Snackbar.LENGTH_LONG)
         .setAction("确定", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dataController.deleteItemAt(i);
-                Snackbar.make(gridView.getRootView(), "删除成功", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(gridView, "删除成功", Snackbar.LENGTH_SHORT).show();
             }
         }).show();
 
