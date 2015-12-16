@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -133,7 +134,7 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
         return true;
     }
 
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     @Override
     public void onCollectionChanged(List<CollectionBean> after) {
         if (after != null && collectionDatas != null) {
