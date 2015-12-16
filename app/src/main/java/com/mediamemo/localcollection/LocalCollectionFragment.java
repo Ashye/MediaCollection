@@ -133,22 +133,21 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
         return true;
     }
 
-
-
     private Handler handler = new Handler();
     @Override
     public void onCollectionChanged(List<CollectionBean> after) {
         if (after != null && collectionDatas != null) {
             collectionDatas.clear();
             collectionDatas.addAll(after);
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    refreshLayout.setRefreshing(false);
                     gvAdapter.notifyDataSetChanged();
                 }
             });
         }
-        refreshLayout.setRefreshing(false);
     }
 
     public void setDataController(CollectionController dataController) {

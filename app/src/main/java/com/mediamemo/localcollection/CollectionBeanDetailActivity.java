@@ -195,11 +195,14 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
 
     private HtmlJsoupHelper jsoupHelper;
     private void actionAddShouCang(final String url) {
+        if (jsoupHelper == null) {
+            jsoupHelper = new HtmlJsoupHelper();
+        }
+        Toast.makeText(getApplicationContext(), "解析数据中...", Toast.LENGTH_LONG).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
             try {
-                jsoupHelper = new HtmlJsoupHelper();
                 jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
                     @Override
                     public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {

@@ -18,13 +18,21 @@ public class HtmlJsoupHelper {
 
 
 
+    private void reset() {
+        iconUrl = null;
+        latest = null;
+    }
+
+
     public void parseHtmlFromString(String html, OnHtmlPageLoadListener htmlPageLoadListener) {
         document = Jsoup.parse(html, "html.parser");
+        reset();
         documentPrepared(htmlPageLoadListener);
     }
 
     public void parseHtmlFromUrl(String url, OnHtmlPageLoadListener htmlPageLoadListener) throws IOException {
         document = Jsoup.connect(url).get();
+        reset();
         documentPrepared(htmlPageLoadListener);
     }
 

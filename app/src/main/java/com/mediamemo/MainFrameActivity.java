@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
@@ -201,6 +202,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         if (jsoupHelper == null) {
             jsoupHelper = new HtmlJsoupHelper();
         }
+        Toast.makeText(getApplicationContext(), "解析数据中...", Toast.LENGTH_LONG).show();
          new Thread(new Runnable() {
                 @Override
                 public void run() {
