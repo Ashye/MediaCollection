@@ -48,8 +48,15 @@
 ### 网络请求
 + BackgroundTask
 
-+ ActionHelper
-
+#### action 包
+    Action
+        1. post action
+        2. action callback
+    ActionEngine:
+        1. do action
+        2. action thread pool
+    HttpHelper:
+        1. fulfill http post method
 
 
 ## 附录
