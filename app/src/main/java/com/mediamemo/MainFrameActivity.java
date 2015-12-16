@@ -1,6 +1,5 @@
 package com.mediamemo;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,20 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ashye.rest.ApiBase;
+import com.ashye.rest.demo.SearchService;
 import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +49,10 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         initToolbar();
         initData();
         setupTabs();
+
+
+
+
     }
 
     private void initToolbar() {
@@ -166,7 +162,33 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_shoucang:
-                checkShouCang();
+
+
+                // TODO: 2015/12/16 test
+                SearchService searchService = new SearchService();
+//                searchService.search("demo" );
+                searchService.search("demo", new ApiBase.ResultListener() {
+                    @Override
+                    public void onSuccess(String string) {
+                        Log.e("ssss", "onSuccess:"+string);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        Log.e("ssss", "onFailure:"+error);
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+//                checkShouCang();
                 return true;
 
             default:
