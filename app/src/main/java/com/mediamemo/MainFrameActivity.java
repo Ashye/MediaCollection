@@ -17,7 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.ashye.rest.ApiBase;
+import com.alibaba.fastjson.JSONObject;
+import com.ashye.rest.BaseApi;
+import com.ashye.rest.demo.GitService;
 import com.ashye.rest.demo.SearchService;
 import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
@@ -27,7 +29,10 @@ import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -165,20 +170,49 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
 
                 // TODO: 2015/12/16 test
-                SearchService searchService = new SearchService();
-//                searchService.search("demo" );
-                searchService.search("demo", new ApiBase.ResultListener() {
+//                SearchService searchService = new SearchService();
+//                searchService.search("demo", new SearchService.ResultListener<String>() {
+//                    @Override
+//                    public void onSuccess(String string) {
+//                        Log.e("ssss", "onSuccess:"+string);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String error) {
+//                        Log.e("ssss", "onFailure:"+error);
+//                    }
+//                });
+
+
+                GitService gitService = new GitService();
+                Map<String, Object> map = new HashMap<>();
+                map.put("aa", "1111111111");
+                map.put("b", 123);
+                gitService.post(new BaseApi.ResultListener<JSONObject>() {
                     @Override
-                    public void onSuccess(String string) {
-                        Log.e("ssss", "onSuccess:"+string);
+                    public void onSuccess(JSONObject data) {
+                        Log.d("sssss", ""+data.toJSONString());
+//                        Log.d("sssss", ""+data.getCurrent_user_url());
                     }
 
                     @Override
                     public void onFailure(String error) {
-                        Log.e("ssss", "onFailure:"+error);
+                        Log.d("sssss", "onFailure: "+error);
                     }
-                });
+                }, map);
 
+
+//                gitService.listApis(new BaseApi.ResultListener<JSONObject>() {
+//                    @Override
+//                    public void onSuccess(JSONObject data) {
+//                        Log.e("sss", "onSuccess:"+data.toJSONString());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String error) {
+//                        Log.e("sss", "onFailure error:"+error);
+//                    }
+//                });
 
 
 
