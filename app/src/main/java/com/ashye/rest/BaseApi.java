@@ -4,6 +4,7 @@ package com.ashye.rest;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ashye.rest.converter.StringConverter;
 import com.ashye.rest.demo.FastJsonConverter;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
@@ -50,7 +51,7 @@ public abstract class BaseApi {
         retrofit = new Retrofit.Builder()
                 .baseUrl(defaultAPI)
                 .client(defaultClient())
-                .addConverterFactory(factory == null ? new FastJsonConverter() : factory)
+                .addConverterFactory(factory == null ? new StringConverter() : factory)
                 .build();
     }
 
@@ -58,7 +59,7 @@ public abstract class BaseApi {
         retrofit = new Retrofit.Builder()
                 .baseUrl(TextUtils.isEmpty(url) ? defaultAPI : url)
                 .client(defaultClient())
-                .addConverterFactory(factory == null ? new FastJsonConverter() : factory)
+                .addConverterFactory(factory == null ? new StringConverter() : factory)
                 .build();
     }
 

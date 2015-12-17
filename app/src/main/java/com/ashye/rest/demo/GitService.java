@@ -112,27 +112,18 @@ public class GitService extends BaseApi {
         }
     }
 
-    private static class GitApiConverter extends BaseConverter<JSONObject> {
+    private static class GitApiConverter extends BaseConverter<Map, JSONObject> {
         @Override
-        protected JSONObject converterBody(String body) {
+        protected JSONObject converterFromBody(String body) {
 //            JSONObject bean = JSON.parseObject(body, GitApiBean.class);
 //            return bean;
             return JSON.parseObject(body);
         }
 
         @Override
-        public Converter<?, RequestBody> toRequestBody(Type type, Annotation[] annotations) {
-//            Log.e("sssssssss", "aaaaaaaaaaaaaaa:" + type.getClass().getCanonicalName());
-
-
-            return new Converter<Map<String, Object>, RequestBody>() {
-                @Override
-                public RequestBody convert(Map<String, Object> value) throws IOException {
-                    JSONObject json = new JSONObject(value);
-                    RequestBody body = RequestBody.create(contentType, encode(json.toJSONString()));
-                    return body;
-                }
-            };
+        protected String converterToBody(Map postData) {
+            JSONObject jsonObject = new JSONObject(postData);
+            return encode(jsonObject.toJSONString());
         }
     }
 }

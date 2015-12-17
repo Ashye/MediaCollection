@@ -21,6 +21,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ashye.rest.BaseApi;
 import com.ashye.rest.demo.GitService;
 import com.ashye.rest.demo.SearchService;
+import com.ashye.restSecond.ApiService;
+import com.ashye.restSecond.ServiceProvider;
 import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
 import com.mediamemo.localcollection.CollectionBean;
@@ -184,22 +186,22 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 //                });
 
 
-                GitService gitService = new GitService();
-                Map<String, Object> map = new HashMap<>();
-                map.put("aa", "1111111111");
-                map.put("b", 123);
-                gitService.post(new BaseApi.ResultListener<JSONObject>() {
-                    @Override
-                    public void onSuccess(JSONObject data) {
-                        Log.d("sssss", ""+data.toJSONString());
-//                        Log.d("sssss", ""+data.getCurrent_user_url());
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        Log.d("sssss", "onFailure: "+error);
-                    }
-                }, map);
+//                GitService gitService = new GitService();
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("aa", "1111111111");
+//                map.put("b", 123);
+//                gitService.post(new BaseApi.ResultListener<JSONObject>() {
+//                    @Override
+//                    public void onSuccess(JSONObject data) {
+//                        Log.d("sssss", ""+data.toJSONString());
+////                        Log.d("sssss", ""+data.getCurrent_user_url());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String error) {
+//                        Log.d("sssss", "onFailure: "+error);
+//                    }
+//                }, map);
 
 
 //                gitService.listApis(new BaseApi.ResultListener<JSONObject>() {
@@ -214,7 +216,8 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 //                    }
 //                });
 
-
+                ServiceProvider.BaiduSearch search = new ApiService().getService(ServiceProvider.BaiduSearch.class);
+                search.search("demo", "http://www.baidu.com");
 
 
 

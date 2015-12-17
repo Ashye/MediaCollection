@@ -7,10 +7,10 @@ import com.ashye.rest.converter.BaseConverter;
 /**
  * Created by Administrator on 2015/12/16.
  */
-public class FastJsonConverter extends BaseConverter<JSONObject> {
+public class FastJsonConverter extends BaseConverter<String, JSONObject> {
 
     @Override
-    protected JSONObject converterBody(String body) {
+    protected JSONObject converterFromBody(String body) {
         JSONObject json = null;
         try {
             json = JSON.parseObject(body);
@@ -18,5 +18,10 @@ public class FastJsonConverter extends BaseConverter<JSONObject> {
             throw new RuntimeException("FastJsonConverter --> convert to Json failed!!!");
         }
         return json;
+    }
+
+    @Override
+    protected String converterToBody(String postData) {
+        return encode(postData);
     }
 }

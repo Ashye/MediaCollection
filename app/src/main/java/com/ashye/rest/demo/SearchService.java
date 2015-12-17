@@ -1,6 +1,7 @@
 package com.ashye.rest.demo;
 
 import com.ashye.rest.BaseApi;
+import com.ashye.rest.converter.StringConverter;
 
 import retrofit.Call;
 import retrofit.http.GET;
