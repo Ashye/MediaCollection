@@ -1,3 +1,4 @@
+# MediaCollection
 ## 计划
 + 用 toolbar 菜单取代 FloatActionButton done
 + 添加去收藏功能  使用 snackbar 实现
@@ -45,18 +46,6 @@
         + delete
 
 
-### 网络请求
-+ BackgroundTask
-
-#### action 包
-    Action
-        1. post action
-        2. action callback
-    ActionEngine:
-        1. do action
-        2. action thread pool
-    HttpHelper:
-        1. fulfill http post method
 
 
 ## 附录
