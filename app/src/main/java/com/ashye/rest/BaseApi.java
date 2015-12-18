@@ -2,11 +2,8 @@ package com.ashye.rest;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ashye.rest.converter.StringConverter;
-import com.ashye.rest.demo.FastJsonConverter;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -18,7 +15,6 @@ import retrofit.Callback;
 import retrofit.Converter;
 import retrofit.Response;
 import retrofit.Retrofit;
-import retrofit.http.Header;
 
 /**
  * Created by Administrator on 2015/12/16.
@@ -28,7 +24,7 @@ public abstract class BaseApi {
     private Retrofit retrofit;
     private static final String defaultAPI = "http://www.baidu.com";
 
-    private static Interceptor headerInterceptor;
+
     private static final String[] headerName = new String[]{
             "User-Agent",
             "Accept",
@@ -44,10 +40,11 @@ public abstract class BaseApi {
 
 
     public BaseApi() {
-        headerInterceptor = getHeaderInterceptor();
+        headerInterceptor = initHeaderInterceptor();
     }
 
     protected void init(Converter.Factory factory) {
+        retrofit = null;
         retrofit = new Retrofit.Builder()
                 .baseUrl(defaultAPI)
                 .client(defaultClient())
@@ -56,6 +53,7 @@ public abstract class BaseApi {
     }
 
     protected void init(String url, Converter.Factory factory) {
+        retrofit = null;
         retrofit = new Retrofit.Builder()
                 .baseUrl(TextUtils.isEmpty(url) ? defaultAPI : url)
                 .client(defaultClient())
@@ -63,28 +61,33 @@ public abstract class BaseApi {
                 .build();
     }
 
+    private static OkHttpClient client;
     protected OkHttpClient defaultClient() {
-        OkHttpClient client = new OkHttpClient();
-        client.networkInterceptors().add(getHeaderInterceptor());
+        if (client == null) {
+            client = new OkHttpClient();
+            client.networkInterceptors().add(initHeaderInterceptor());
+        }
         return client;
     }
 
-    protected Interceptor getHeaderInterceptor() {
+    private static Interceptor headerInterceptor;
+    protected Interceptor initHeaderInterceptor() {
+        if (headerInterceptor == null) {
+            headerInterceptor = new Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                    Request origin = chain.request();
+                    Request request = origin.newBuilder()
+                            .addHeader(headerName[1], headerValue[1])
+                            .addHeader(headerName[2], headerValue[2])
+                            .addHeader(headerName[0], headerValue[0])
+                            .build();
 
-        Interceptor interceptor = new Interceptor() {
-            @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                Request origin = chain.request();
-                Request request = origin.newBuilder()
-                        .addHeader(headerName[1], headerValue[1])
-                        .addHeader(headerName[2], headerValue[2])
-                        .addHeader(headerName[0], headerValue[0])
-                        .build();
-
-                return chain.proceed(request);
-            }
-        };
-        return interceptor;
+                    return chain.proceed(request);
+                }
+            };
+        }
+        return headerInterceptor;
     }
 
     protected <T> T getService(Class<T> clz) {
@@ -96,7 +99,16 @@ public abstract class BaseApi {
         private ResultListener<T> listener;
 
 
+        public CallResultWrapper() {
+
+        }
+
         public CallResultWrapper(ResultListener<T> listener) {
+            this.listener = listener;
+        }
+
+
+        public void setListener(ResultListener<T> listener) {
             this.listener = listener;
         }
 

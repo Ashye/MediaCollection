@@ -14,7 +14,10 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import retrofit.Call;
+import retrofit.Callback;
 import retrofit.Converter;
+import retrofit.Response;
+import retrofit.Retrofit;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
@@ -69,27 +72,26 @@ public class GitService extends BaseApi {
         apiService = getService(GitApi.class);
     }
 
-    public void listApis(ResultListener<JSONObject> listener) {
-        Call<JSONObject> call = apiService.getApis();
-        call.enqueue(new CallResultWrapper<JSONObject>(listener));
-    }
-
-    public void getApiBean(ResultListener<GitApiBean> listener) {
-        Call<GitApiBean> call = apiService.getApiBean();
-        call.enqueue(new CallResultWrapper<GitApiBean>(listener));
-    }
-
-    public void getApiBean(ResultListener<JSONObject> listener, Map<String, Object> map) {
-        Call<JSONObject> call = apiService.getApiBean(map);
-        call.enqueue(new CallResultWrapper<JSONObject>(listener));
-    }
-
-    public void post(ResultListener<JSONObject> listener, Map<String, Object> map) {
-        Call<JSONObject> call = apiService.postData(map);
-        call.enqueue(new CallResultWrapper<JSONObject>(listener));
-//        call.enqueue(new call);
-
-    }
+//    public void listApis(ResultListener<JSONObject> listener) {
+//        Call<JSONObject> call = apiService.getApis();
+//        call.enqueue(new CallResultWrapper<JSONObject>(listener));
+//    }
+//
+//    public void getApiBean(ResultListener<GitApiBean> listener) {
+//        Call<GitApiBean> call = apiService.getApiBean();
+//        call.enqueue(new CallResultWrapper<GitApiBean>(listener));
+//    }
+//
+//    public void getApiBean(ResultListener<JSONObject> listener, Map<String, Object> map) {
+//        Call<JSONObject> call = apiService.getApiBean(map);
+//        call.enqueue(new CallResultWrapper<JSONObject>(listener));
+//    }
+//
+//    public void post(ResultListener<JSONObject> listener, Map<String, Object> map) {
+//        Call<JSONObject> call = apiService.postData(map);
+//        call.enqueue(new CallResultWrapper<JSONObject>(listener));
+////        call.enqueue(new call);
+//    }
 
     public static class GitApiBean {
         private String current_user_url;
@@ -114,14 +116,14 @@ public class GitService extends BaseApi {
 
     private static class GitApiConverter extends BaseConverter<Map, JSONObject> {
         @Override
-        protected JSONObject converterFromBody(String body) {
+        protected JSONObject convertResponseBody(String body) {
 //            JSONObject bean = JSON.parseObject(body, GitApiBean.class);
 //            return bean;
             return JSON.parseObject(body);
         }
 
         @Override
-        protected String converterToBody(Map postData) {
+        protected String convertRequestParameter(Map postData) {
             JSONObject jsonObject = new JSONObject(postData);
             return encode(jsonObject.toJSONString());
         }

@@ -1,6 +1,5 @@
 package com.ashye.rest.converter;
 
-import com.ashye.rest.converter.BaseConverter;
 
 /**
  * Created by Administrator on 2015/12/16.
@@ -8,12 +7,12 @@ import com.ashye.rest.converter.BaseConverter;
 public class StringConverter extends BaseConverter<String, String> {
 
     @Override
-    protected String converterFromBody(String body) {
+    protected String convertResponseBody(String body) {
         return body;
     }
 
     @Override
-    protected String converterToBody(String postData) {
+    protected String convertRequestParameter(String postData) {
         return postData;
     }
 }

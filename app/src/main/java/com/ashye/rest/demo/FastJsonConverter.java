@@ -10,7 +10,7 @@ import com.ashye.rest.converter.BaseConverter;
 public class FastJsonConverter extends BaseConverter<String, JSONObject> {
 
     @Override
-    protected JSONObject converterFromBody(String body) {
+    protected JSONObject convertResponseBody(String body) {
         JSONObject json = null;
         try {
             json = JSON.parseObject(body);
@@ -21,7 +21,7 @@ public class FastJsonConverter extends BaseConverter<String, JSONObject> {
     }
 
     @Override
-    protected String converterToBody(String postData) {
+    protected String convertRequestParameter(String postData) {
         return encode(postData);
     }
 }

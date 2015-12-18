@@ -23,10 +23,12 @@ public abstract class BaseConverter<PostBodyType, ReturnType> extends Converter.
         return new Converter<ResponseBody, ReturnType>() {
             @Override
             public ReturnType convert(ResponseBody value) throws IOException {
-                return converterFromBody(decode(value.string()));
+                return convertResponseBody(decode(value.string()));
             }
         };
     }
+
+    protected abstract ReturnType convertResponseBody(String body);
 
     /**
      * POST Method posted body converter
@@ -39,13 +41,13 @@ public abstract class BaseConverter<PostBodyType, ReturnType> extends Converter.
         return new Converter<PostBodyType, RequestBody>() {
             @Override
             public RequestBody convert(PostBodyType value) throws IOException {
-                return RequestBody.create(contentType, encode(converterToBody(value)));
+                return RequestBody.create(contentType, encode(convertRequestParameter(value)));
             }
         };
     }
 
-    protected abstract ReturnType converterFromBody(String body);
-    protected abstract String converterToBody(PostBodyType postData);
+
+    protected abstract String convertRequestParameter(PostBodyType postData);
 
 
     protected String encode(String origin) {

@@ -1,15 +1,14 @@
 package com.mediamemo;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,24 +16,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ashye.rest.BaseApi;
-import com.ashye.rest.demo.GitService;
 import com.ashye.rest.demo.SearchService;
-import com.ashye.restSecond.ApiService;
-import com.ashye.restSecond.ServiceProvider;
-import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.datacontroller.CollectionController;
+import com.mediamemo.html.HtmlJsoupHelper;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,6 +44,8 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_frame);
+
+
 
         initToolbar();
         initData();
@@ -170,62 +164,19 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         switch (item.getItemId()) {
             case R.id.action_shoucang:
 
-
-                // TODO: 2015/12/16 test
-//                SearchService searchService = new SearchService();
-//                searchService.search("demo", new SearchService.ResultListener<String>() {
+//                new SearchService().search("demo", new BaseApi.ResultListener<String>() {
 //                    @Override
-//                    public void onSuccess(String string) {
-//                        Log.e("ssss", "onSuccess:"+string);
+//                    public void onSuccess(String data) {
+//                        Log.e("sss", "onSuccess:"+data);
 //                    }
 //
 //                    @Override
 //                    public void onFailure(String error) {
-//                        Log.e("ssss", "onFailure:"+error);
+//                        Log.e("sss", "onSuccess:"+error);
 //                    }
 //                });
 
-
-//                GitService gitService = new GitService();
-//                Map<String, Object> map = new HashMap<>();
-//                map.put("aa", "1111111111");
-//                map.put("b", 123);
-//                gitService.post(new BaseApi.ResultListener<JSONObject>() {
-//                    @Override
-//                    public void onSuccess(JSONObject data) {
-//                        Log.d("sssss", ""+data.toJSONString());
-////                        Log.d("sssss", ""+data.getCurrent_user_url());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String error) {
-//                        Log.d("sssss", "onFailure: "+error);
-//                    }
-//                }, map);
-
-
-//                gitService.listApis(new BaseApi.ResultListener<JSONObject>() {
-//                    @Override
-//                    public void onSuccess(JSONObject data) {
-//                        Log.e("sss", "onSuccess:"+data.toJSONString());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String error) {
-//                        Log.e("sss", "onFailure error:"+error);
-//                    }
-//                });
-
-                ServiceProvider.BaiduSearch search = new ApiService().getService(ServiceProvider.BaiduSearch.class);
-                search.search("demo", "http://www.baidu.com");
-
-
-
-
-
-
-
-//                checkShouCang();
+                checkShouCang();
                 return true;
 
             default:
