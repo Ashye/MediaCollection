@@ -24,10 +24,9 @@ public class HtmlJsoupHelper {
     }
 
 
-    public void parseHtmlFromString(String html, OnHtmlPageLoadListener htmlPageLoadListener) {
+    public void parseHtmlFromString(String html) {
         document = Jsoup.parse(html, "html.parser");
         reset();
-        documentPrepared(htmlPageLoadListener);
     }
 
     public void parseHtmlFromUrl(String url, OnHtmlPageLoadListener htmlPageLoadListener) throws IOException {

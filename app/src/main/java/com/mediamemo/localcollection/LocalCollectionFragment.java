@@ -115,7 +115,8 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
 //        SnackBarMessage("打开详情页面");
         Intent intent = new Intent(getActivity(), CollectionBeanDetailActivity.class);
         intent.putExtra("bean", JSON.toJSONString(bean));
-        startActivity(intent);
+        intent.putExtra("idx", i);
+        startActivityForResult(intent, 0);
     }
 
     @Override
@@ -155,10 +156,27 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
         this.dataController = dataController;
     }
 
-
-
-
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (CollectionBeanDetailActivity.DetailBack.DELETE.ordinal() == resultCode) {
+                int idx = data.getIntExtra("idx", -1);
+                if (idx >=0) {
+                    dataController.deleteItemAt(idx);
+                }
+            }else if (CollectionBeanDetailActivity.DetailBack.UPDATED.ordinal() == resultCode) {
+                int idx = data.getIntExtra("idx", -1);
+                if (idx >=0) {
+                    CollectionBean bean = JSON.parseObject(data.getStringExtra("bean"), CollectionBean.class);
+                    if (bean != null) {
+                        dataController.updateItem(idx, bean);
+                    }
+                }
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

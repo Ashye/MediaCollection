@@ -17,14 +17,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.ashye.rest.BaseApi;
-import com.ashye.rest.demo.SearchService;
 import com.mediamemo.datacontroller.CollectionController;
-import com.mediamemo.html.HtmlJsoupHelper;
+import com.mediamemo.datacontroller.CollectionService;
 import com.mediamemo.localcollection.CollectionBean;
 import com.mediamemo.localcollection.LocalCollectionFragment;
 import com.mediamemo.onlinelibrary.OnlineLibraryFragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -45,15 +43,9 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_frame);
 
-
-
         initToolbar();
         initData();
         setupTabs();
-
-
-
-
     }
 
     private void initToolbar() {
@@ -163,20 +155,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_shoucang:
-
-//                new SearchService().search("demo", new BaseApi.ResultListener<String>() {
-//                    @Override
-//                    public void onSuccess(String data) {
-//                        Log.e("sss", "onSuccess:"+data);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String error) {
-//                        Log.e("sss", "onSuccess:"+error);
-//                    }
-//                });
-
-                checkShouCang();
+                addCollectionItem();
                 return true;
 
             default:
@@ -187,7 +166,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
 
 
     private static final String[] keys = new String[]{"entries", "topics"};
-    private void checkShouCang() {
+    private void addCollectionItem() {
         int tabId = frameTabLayout.getSelectedTabPosition();
         if (tabId == 1) {
             OnlineLibraryFragment tab = (OnlineLibraryFragment) fragmentVPAdapter.getFragment(tabId);
@@ -207,35 +186,29 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         }
     }
 
-    private HtmlJsoupHelper jsoupHelper;
+    private CollectionService collectionService;
     private void actionAddShouCang(final String url) {
-        if (jsoupHelper == null) {
-            jsoupHelper = new HtmlJsoupHelper();
+        if (collectionService == null) {
+            collectionService = new CollectionService();
         }
         Toast.makeText(getApplicationContext(), "解析数据中...", Toast.LENGTH_LONG).show();
-         new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
-                            @Override
-                            public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {
-                                String title = jsoupHelper.getTitle();
-                                String iconUrl = jsoupHelper.getIconUrl();
-                                String latest = jsoupHelper.getLatest();
-//                                Log.e("title", "page title:" + title);
-//                                Log.e("icon", "page iconUrl:" + iconUrl);
-//                                Log.e("latest", "page latest:" + latest);
-                                if (collectionDataController.addItem(new CollectionBean(title, url, iconUrl, latest))) {
-                                    SnackBarMessage("收藏成功");
-                                }
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
+        collectionService = new CollectionService();
+        collectionService.collectionItem(url, new BaseApi.ResultListener<CollectionBean>() {
+            @Override
+            public void onSuccess(CollectionBean data) {
+                if (collectionDataController.addItem(data)) {
+                    SnackBarMessage("收藏成功");
+                }else {
+                    SnackBarMessage("收藏失败");
                 }
-            }).start();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                SnackBarMessage("收藏失败："+error);
+            }
+        });
     }
 
 

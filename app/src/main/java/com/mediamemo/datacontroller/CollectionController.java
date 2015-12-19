@@ -57,6 +57,13 @@ public class CollectionController extends SharePrefStorage {
         return true;
     }
 
+    public boolean updateItem(int position, CollectionBean bean) {
+        collectionBeans.remove(position);
+        collectionBeans.add(position, bean);
+        flush();
+        return true;
+    }
+
     public boolean deleteItem(String key) {
         for (CollectionBean bean : collectionBeans) {
             if (bean.getUrl().equals(key)) {

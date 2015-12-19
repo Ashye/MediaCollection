@@ -22,7 +22,7 @@ import retrofit.Retrofit;
 public abstract class BaseApi {
 
     private Retrofit retrofit;
-    private static final String defaultAPI = "http://www.baidu.com";
+    private static final String defaultAPI = "http://www.verycd.com";
 
 
     private static final String[] headerName = new String[]{

@@ -1,5 +1,6 @@
 package com.mediamemo.localcollection;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,10 +9,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,20 +35,19 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     private WebView webView;
     private SwipeRefreshLayout refreshLayout;
     private CollectionBean bean;
+    private boolean isCollected = true;
+    private boolean isUpdated = false;
+    private boolean needUpdate = false;
+    private int index = -1;
 
-    private CollectionController collectionController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_bean_detail);
 
-        collectionController = CollectionController.newInstance(this);
-
         getBundleData();
-
         initToolbar();
-
         initView();
     }
 
@@ -54,6 +57,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
             Bundle bundle = this.getIntent().getExtras();
             if (bundle != null) {
                 String data = bundle.getString("bean", null);
+                index = bundle.getInt("idx");
                 bean = JSON.parseObject(data, CollectionBean.class);
             }
         } catch (Exception e) {
@@ -78,7 +82,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                onFinished();
             }
         });
     }
@@ -112,6 +116,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
 
+        webView.addJavascriptInterface(new InJSLoadingHtml(), "local_obj");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -123,21 +128,17 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 refreshLayout.setRefreshing(true);
-                if (collectionController.queryItem(url)) {
-                    if (shouCang != null) {
-                        shouCang.setIcon(R.drawable.shou_cang_yes);
-                    }
-                }else {
-                    if (shouCang != null) {
-                        shouCang.setIcon(R.drawable.shou_cang_no);
-                    }
-                }
+                setCollectionIcon();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 refreshLayout.setRefreshing(false);
+                if (!isUpdated && url.equals(bean.getUrl())) {
+                    view.loadUrl("javascript:window.local_obj.showHtml(document.getElementsByTagName('html')[0].innerHTML);");
+//                    isUpdated = true;
+                }
             }
         });
 
@@ -149,17 +150,15 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
                         webView.stopLoading();
                         goBackPage();
                         return true;
-                    }else {
-                        finish();
+                    } else {
+                        onFinished();
                     }
                 }
                 return false;
             }
         });
 
-        if (bean != null) {
-            webView.loadUrl(bean.getUrl());
-        }
+        webView.loadUrl(bean.getUrl());
     }
 
     private MenuItem shouCang;
@@ -167,6 +166,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         shouCang = menu.findItem(R.id.action_shoucang);
+        setCollectionIcon();
         return true;
     }
 
@@ -182,53 +182,70 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     }
 
     private void checkShouCang() {
-        if (collectionController.queryItem(bean.getUrl())) {
-            collectionController.deleteItem(bean.getUrl());
+        if (isCollected) {
+            isCollected = false;
             shouCang.setIcon(R.drawable.shou_cang_no);
             SnackBarMessage("删除收藏成功");
-
         }else {
-            actionAddShouCang(bean.getUrl());
+            isCollected = true;
             shouCang.setIcon(R.drawable.shou_cang_yes);
+            SnackBarMessage("收藏成功");
         }
     }
 
-    private HtmlJsoupHelper jsoupHelper;
-    private void actionAddShouCang(final String url) {
-        if (jsoupHelper == null) {
-            jsoupHelper = new HtmlJsoupHelper();
+    private void setCollectionIcon() {
+        if (isCollected) {
+            if (shouCang != null) {
+                shouCang.setIcon(R.drawable.shou_cang_yes);
+            }
+        } else {
+            if (shouCang != null) {
+                shouCang.setIcon(R.drawable.shou_cang_no);
+            }
         }
-        Toast.makeText(getApplicationContext(), "解析数据中...", Toast.LENGTH_LONG).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-            try {
-                jsoupHelper.parseHtmlFromUrl(url, new HtmlJsoupHelper.OnHtmlPageLoadListener() {
-                    @Override
-                    public void onHtmlPageLoadedFinished(HtmlJsoupHelper jsoupHelper) {
-                        String title = jsoupHelper.getTitle();
-                        String iconUrl = jsoupHelper.getIconUrl();
-                        String latest = jsoupHelper.getLatest();
-//                            Log.e("title", "page title:" + title);
-//                            Log.e("icon", "page iconUrl:" + iconUrl);
-//                            Log.e("latest", "page latest:" + latest);
-                        if (collectionController.addItem(new CollectionBean(title, bean.getUrl(), iconUrl, latest))) {
-//                            shouCang.setIcon(R.drawable.shou_cang_yes);
-                            SnackBarMessage("收藏成功");
-                        }
+    }
 
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+    final class InJSLoadingHtml {
+        @JavascriptInterface
+        public void showHtml(String html) {
+//            Log.e("ssss", ""+html.length());
+//            CollectionBean bean = getCollectionBeanFromHtml(html);
+            checkLatest(getCollectionBeanFromHtml(html));
+        }
+    }
+
+    private CollectionBean getCollectionBeanFromHtml(String html) {
+        HtmlJsoupHelper jsoupHelper = new HtmlJsoupHelper();
+        jsoupHelper.parseHtmlFromString(html);
+        CollectionBean bean = new CollectionBean();
+        bean.setIconUrl(jsoupHelper.getIconUrl());
+        bean.setUrl(this.bean.getUrl());
+        bean.setTitle(jsoupHelper.getTitle());
+        bean.setLatest(jsoupHelper.getLatest());
+        return bean;
+    }
+
+    private void checkLatest(CollectionBean bean) {
+        if (!TextUtils.isEmpty(this.bean.getLatest())) {
+            if (bean != null) {
+                if (this.bean.getLatest().equals(bean.getLatest())) {
+                    ;
+                }else {
+                    this.bean = bean;
+                    needUpdate = true;
+                }
+                isUpdated = true;
             }
-            }
-        }).start();
+        }else {
+            isUpdated = true;
+        }
     }
 
     @Override
     public void onClick(View view) {
-        goBackPage();
+        if (view.getId() == btnHistory.getId()) {
+            goBackPage();
+        }
     }
 
     public void goBackPage() {
@@ -241,5 +258,29 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
 
     private void SnackBarMessage(String message) {
         Snackbar.make(webView, "".concat(message), Snackbar.LENGTH_SHORT).show();
+    }
+
+    public static enum  DetailBack {
+        NORMAL,
+        DELETE,
+        UPDATED
+    }
+    private void onFinished() {
+        Intent update = new Intent();
+
+        if (isCollected) {
+            if (needUpdate) {
+                update.putExtra("bean", JSON.toJSONString(bean));
+                update.putExtra("idx", index);
+                setResult(DetailBack.UPDATED.ordinal(), update);
+            }else {
+                setResult(DetailBack.NORMAL.ordinal());
+            }
+        }else {
+            update.putExtra("idx", index);
+            setResult(DetailBack.DELETE.ordinal(), update);
+        }
+
+        finish();
     }
 }
