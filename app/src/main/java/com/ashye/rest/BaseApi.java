@@ -122,7 +122,7 @@ public abstract class BaseApi {
             setResult(false, null, t.getMessage());
         }
 
-        private void setResult(boolean isSuccess, T t, String error) {
+        protected void setResult(boolean isSuccess, T t, String error) {
             if (listener != null) {
                 if (isSuccess) {
                     listener.onSuccess(t);

@@ -169,7 +169,7 @@ public class LocalCollectionFragment extends Fragment implements AdapterView.OnI
                 if (idx >=0) {
                     CollectionBean bean = JSON.parseObject(data.getStringExtra("bean"), CollectionBean.class);
                     if (bean != null) {
-                        dataController.updateItem(idx, bean);
+                        dataController.replaceItem(idx, bean);
                     }
                 }
             }

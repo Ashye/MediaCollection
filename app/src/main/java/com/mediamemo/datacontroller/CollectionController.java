@@ -1,6 +1,7 @@
 package com.mediamemo.datacontroller;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.ashye.storage.SharePrefStorage;
@@ -57,21 +58,24 @@ public class CollectionController extends SharePrefStorage {
         return true;
     }
 
-    public boolean updateItem(int position, CollectionBean bean) {
+    public void updateItemLatest(CollectionBean bean) {
+        if (TextUtils.isEmpty(bean.getLatest())) {
+            return ;
+        }
+        for (CollectionBean old : collectionBeans) {
+            if (old.getUrl().equals(bean.getUrl()) && !bean.getLatest().equals(old.getLatest())) {
+                old.setLatest(bean.getLatest());
+                flush();
+                return;
+            }
+        }
+    }
+
+    public boolean replaceItem(int position, CollectionBean bean) {
         collectionBeans.remove(position);
         collectionBeans.add(position, bean);
         flush();
         return true;
-    }
-
-    public boolean deleteItem(String key) {
-        for (CollectionBean bean : collectionBeans) {
-            if (bean.getUrl().equals(key)) {
-                deleteItem(bean);
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean deleteItem(CollectionBean bean) {
@@ -86,6 +90,11 @@ public class CollectionController extends SharePrefStorage {
             flush(); 
         }
         return true;
+    }
+
+    public List<CollectionBean> getCollectionBeans() {
+        final List<CollectionBean> list = collectionBeans;
+        return list;
     }
 
     private boolean flush() {

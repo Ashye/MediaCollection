@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.ashye.rest.BaseApi;
 import com.mediamemo.datacontroller.CollectionController;
@@ -35,6 +34,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     private FrameTabViewPager fragmentViewPager;
 
     private CollectionController collectionDataController;
+    private CollectionService collectionService;
 
 
 
@@ -140,7 +140,19 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
     }
 
     private void initData() {
+        collectionService = new CollectionService();
         collectionDataController = CollectionController.newInstance(this);
+        collectionService.collectionUpdate(collectionDataController.getCollectionBeans(), new BaseApi.ResultListener<CollectionBean>() {
+            @Override
+            public void onSuccess(CollectionBean data) {
+                collectionDataController.updateItemLatest(data);
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
     }
 
 
@@ -186,12 +198,7 @@ public class MainFrameActivity extends AppCompatActivity implements LocalCollect
         }
     }
 
-    private CollectionService collectionService;
     private void actionAddShouCang(final String url) {
-        if (collectionService == null) {
-            collectionService = new CollectionService();
-        }
-        Toast.makeText(getApplicationContext(), "解析数据中...", Toast.LENGTH_LONG).show();
 
         collectionService = new CollectionService();
         collectionService.collectionItem(url, new BaseApi.ResultListener<CollectionBean>() {

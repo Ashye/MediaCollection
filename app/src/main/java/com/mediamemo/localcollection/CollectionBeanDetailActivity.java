@@ -208,8 +208,6 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     final class InJSLoadingHtml {
         @JavascriptInterface
         public void showHtml(String html) {
-//            Log.e("ssss", ""+html.length());
-//            CollectionBean bean = getCollectionBeanFromHtml(html);
             checkLatest(getCollectionBeanFromHtml(html));
         }
     }
@@ -228,9 +226,7 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
     private void checkLatest(CollectionBean bean) {
         if (!TextUtils.isEmpty(this.bean.getLatest())) {
             if (bean != null) {
-                if (this.bean.getLatest().equals(bean.getLatest())) {
-                    ;
-                }else {
+                if (!this.bean.getLatest().equals(bean.getLatest())) {
                     this.bean = bean;
                     needUpdate = true;
                 }
