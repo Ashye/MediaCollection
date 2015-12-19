@@ -26,7 +26,7 @@ public abstract class BaseStorage {
 
     protected SharedPreferences getSharedPreferences(Context context) {
         if (preferences == null) {
-            context.getSharedPreferences(getSharePreferenceName(), Context.MODE_PRIVATE);
+            preferences = context.getSharedPreferences(getSharePreferenceName(), Context.MODE_PRIVATE);
         }
         return preferences;
     }
