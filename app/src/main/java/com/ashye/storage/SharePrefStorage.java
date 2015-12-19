@@ -9,20 +9,16 @@ import android.content.SharedPreferences;
 public class SharePrefStorage extends BaseStorage {
 
 
-
-
     @Override
     protected boolean save(Context context, String key, String value) {
-        SharedPreferences sp = context.getSharedPreferences(getDataName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(key, value);
         return editor.commit();
     }
 
     @Override
     protected boolean save(Context context, String key, int value) {
-        SharedPreferences sp = context.getSharedPreferences(getDataName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putInt(key, value);
         return editor.commit();
     }
@@ -35,8 +31,7 @@ public class SharePrefStorage extends BaseStorage {
      */
     @Override
     protected String loadString(Context context, String key) {
-        SharedPreferences sp = context.getSharedPreferences(getDataName(), Context.MODE_PRIVATE);
-        return sp.getString(key, null);
+        return getSharedPreferences(context).getString(key, null);
     }
 
     /**
@@ -47,8 +42,7 @@ public class SharePrefStorage extends BaseStorage {
      */
     @Override
     protected int loadInt(Context context, String key) {
-        SharedPreferences sp = context.getSharedPreferences(getDataName(), Context.MODE_PRIVATE);
-        return sp.getInt(key, -1);
+        return getSharedPreferences(context).getInt(key, -1);
     }
 
 }

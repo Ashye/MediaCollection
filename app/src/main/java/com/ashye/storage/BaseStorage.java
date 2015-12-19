@@ -11,11 +11,28 @@ import android.text.TextUtils;
 public abstract class BaseStorage {
 
     private static final String defaultDataName = "data.pref";
+    private static String dataName;
+    private SharedPreferences preferences;
 
 
+    protected String getSharePreferenceName() {
+        return TextUtils.isEmpty(dataName) ? defaultDataName : dataName;
+    }
 
-    protected String getDataName() {
-        return defaultDataName;
+    protected void setSharePreferenceName(String dataName) {
+        BaseStorage.dataName = dataName;
+        preferences = null;
+    }
+
+    protected SharedPreferences getSharedPreferences(Context context) {
+        if (preferences == null) {
+            context.getSharedPreferences(getSharePreferenceName(), Context.MODE_PRIVATE);
+        }
+        return preferences;
+    }
+
+    protected void destroy() {
+        preferences = null;
     }
 
     protected abstract boolean save(Context context, String key, String value);
