@@ -137,7 +137,6 @@ public class CollectionBeanDetailActivity extends AppCompatActivity implements F
                 refreshLayout.setRefreshing(false);
                 if (!isUpdated && url.equals(bean.getUrl())) {
                     view.loadUrl("javascript:window.local_obj.showHtml(document.getElementsByTagName('html')[0].innerHTML);");
-//                    isUpdated = true;
                 }
             }
         });
